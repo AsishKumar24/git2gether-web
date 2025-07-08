@@ -1,20 +1,36 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { addUser } from './utils/userSlice'
+import { useNavigate } from 'react-router'
 const Login = () => {
-  const [emailId, setEmailId] = useState('')
-  const [password, setPassword] = useState('')
+  const [emailId, setEmailId] = useState('anjali@gmail.com')
+  const [password, setPassword] = useState('Anjali@123')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [isLoginForm, setIsLoginForm] = useState(true)
   const [error, setError] = useState('')
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const handleLogin = async () => {
     try {
-      const res = await axios.post('http://localhost:3000/login', {
-        emailId,
-        password
-      })
+      const res = await axios.post(
+        'http://localhost:3000/login',
+        {
+          emailId,
+          password
+        },
+        {
+          // highly important in order to show cookies in web as token ids generated but not passed on to cookies
+          withCredentials: true
+        }
+      )
+      //console.log(res.data)
+      dispatch(addUser(res.data))
+      return navigate("/")
     } catch (error) {
-        console.log(error.message)
+      console.log(error.message)
     }
   }
   return (
