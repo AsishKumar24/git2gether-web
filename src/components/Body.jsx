@@ -7,8 +7,8 @@ const Body = () => {
     <div>
       <NavBar />
       {/* //router helps to render children */}
-          <Outlet />
-          <Footer/>
+      <Outlet />
+      <Footer />
     </div>
   )
 }

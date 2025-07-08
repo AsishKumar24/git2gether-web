@@ -1,11 +1,11 @@
 import { BrowserRouter, Route, Routes } from 'react-router'
-import NavBar from './NavBar'
-import Body from './Body'
-import Login from './Login'
-import Profile from './Profile'
+import NavBar from './components/NavBar'
+import Body from './components/Body'
+import Login from './components/Login'
+import Profile from './components/Profile'
 import { Provider } from 'react-redux'
 import appStore from './utils/appStore'
-import Feed from './Feed'
+import Feed from './components/Feed'
 function App () {
   return (
     <>
