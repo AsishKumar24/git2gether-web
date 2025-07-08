@@ -15,6 +15,7 @@ const Body = () => {
     if (userData) return
     try {
       const res = await axios.get(BASE_URL + '/profile/view', {
+        //withcredentials is used for cors
         withCredentials: true
       })
       dispatch(addUser(res.data))

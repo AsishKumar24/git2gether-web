@@ -1,8 +1,29 @@
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router'
+import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router'
+import { BASE_URL } from '../utils/constants'
+import { removeUser } from '../utils/userSlice'
 const NavBar = () => {
+  const navigate = useNavigate()
   const user = useSelector(store => store.user)
+  const dispatch = useDispatch()
   console.log(user)
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        BASE_URL + '/logout',
+        {
+          /*  in post the 2nd option is for data share or the data in post but as in we are handling logout we just use an empty object */
+        },
+        { withCredentials: true }
+      )
+      dispatch(removeUser())
+      return navigate("/login")
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <div className='navbar bg-base-300 warning shadow-sm'>
       <div className='flex-1'>
@@ -38,7 +59,7 @@ const NavBar = () => {
                 <a>Settings</a>
               </li>
               <li>
-                <a>Logout</a>
+                <a onClick={handleLogout}>Logout</a>
               </li>
             </ul>
           </div>
