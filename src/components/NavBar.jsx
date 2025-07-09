@@ -3,63 +3,107 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router'
 import { BASE_URL } from '../utils/constants'
 import { removeUser } from '../utils/userSlice'
+import logo from '../assets/logo.png'
+
 const NavBar = () => {
   const navigate = useNavigate()
   const user = useSelector(store => store.user)
   const dispatch = useDispatch()
-  console.log(user)
+
   const handleLogout = async () => {
     try {
-      await axios.post(
-        BASE_URL + '/logout',
-        {
-          /*  in post the 2nd option is for data share or the data in post but as in we are handling logout we just use an empty object */
-        },
-        { withCredentials: true }
-      )
+      await axios.post(`${BASE_URL}/logout`, {}, { withCredentials: true })
       dispatch(removeUser())
-      return navigate("/login")
-
+      navigate('/login')
     } catch (error) {
       console.log(error)
     }
   }
+
   return (
-    <div className='navbar bg-base-300 warning shadow-sm'>
-      <div className='flex-1'>
-        <Link to='/' className='btn btn-ghost text-xl font-semibold'>
-          💡 Git2gether
+    <div className='navbar bg-base-300 shadow-sm px-4 justify-between'>
+      {/* LEFT: Brand Logo */}
+      <div className='flex items-center gap-2'>
+        <Link
+          to='/'
+          className='flex items-center gap-2 hover:scale-105 transition duration-200'
+        >
+          <img
+            src={logo}
+            alt='Git2gether Logo'
+            className='h-10 w-auto object-contain'
+          />
+          <span className='text-xl font-bold text-white tracking-wide'></span>
         </Link>
       </div>
-      {user && (
-        <div className='flex gap-2'>
-          <div className='form-control my-2.5'>welcome, {user.firstName}</div>
 
-          <div className='dropdown dropdown-end mx-5  flex item-center'>
+      {/* RIGHT: User Info + Dropdown */}
+      {user && (
+        <div className='flex items-center gap-4'>
+          <div className='text-sm text-white hidden md:block'>
+            Welcome, <span className='font-semibold'>{user.firstName}</span>
+          </div>
+
+          <div className='dropdown dropdown-end'>
             <div
               tabIndex={0}
               role='button'
-              className='btn btn-ghost btn-circle avatar'
+              className='btn btn-ghost btn-circle avatar hover:scale-105 transition duration-200'
             >
-              <div className='w-10 rounded-full'>
-                <img alt='user photo' src={user.photoUrl} />
+              <div className='w-10 rounded-full border border-gray-300'>
+                <img
+                  src={
+                    user.photoUrl ||
+                    'https://geographyandyou.com/images/user-profile.png'
+                  }
+                  alt='User'
+                  className='object-cover'
+                  onError={e => {
+                    e.target.onerror = null
+                    e.target.src =
+                      'https://geographyandyou.com/images/user-profile.png'
+                  }}
+                />
               </div>
             </div>
+
             <ul
               tabIndex={0}
-              className='menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow'
+              className='menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-box w-56'
             >
               <li>
-                <Link to='/profile' className='justify-between'>
-                  Profile
-                  <span className='badge'>New</span>
+                <Link to='/profile' className='hover:text-primary font-medium'>
+                  ✏️ Edit Profile
                 </Link>
               </li>
               <li>
-                <a>Settings</a>
+                <Link
+                  to='/connections'
+                  className=' hover:text-pink-400 font-medium'
+                >
+                  🤝 Connections
+                </Link>
               </li>
               <li>
-                <a onClick={handleLogout}>Logout</a>
+                <Link
+                  to='/requests'
+                  className=' hover:text-green-700 font-medium'
+                >
+                  📬 Requests
+                </Link>
+              </li>
+              <li>
+                <span className=' font-medium cursor-pointer hover:text-blue-700'>
+                  ⭐ Premium
+                </span>
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className=' hover:text-red-500 font-medium'
+                >
+                  🚪 Logout
+                </button>
               </li>
             </ul>
           </div>
