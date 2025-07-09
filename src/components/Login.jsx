@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { addUser } from '../utils/userSlice'
-import { Navigate, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { BASE_URL } from '../utils/constants'
+
 const Login = () => {
   const [emailId, setEmailId] = useState('ravi@gmail.com')
   const [password, setPassword] = useState('Ravi@123')
@@ -18,29 +19,68 @@ const Login = () => {
     try {
       const res = await axios.post(
         BASE_URL + '/login',
-        {
-          emailId,
-          password
-        },
-        {
-          // highly important in order to show cookies in web as token ids generated but not passed on to cookies
-          withCredentials: true
-        }
+        { emailId, password },
+        { withCredentials: true }
       )
-      //console.log(res.data)
       dispatch(addUser(res.data))
       return navigate('/')
     } catch (error) {
-      setError(error?.response?.data || 'something went wrong')
+      setError(error?.response?.data || 'Something went wrong')
     }
   }
+
+  const handleSignup = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + '/signup',
+        { firstName, lastName, emailId, password },
+        { withCredentials: true }
+      )
+      dispatch(addUser(res.data.data))
+      return navigate('/profile')
+    } catch (error) {
+      setError(error?.response?.data || 'Something went wrong')
+    }
+  }
+
+  const handleSubmit = () => {
+    setError('')
+    isLoginForm ? handleLogin() : handleSignup()
+  }
+
   return (
     <div className='flex justify-center my-10'>
       <div className='card card-border bg-base-200 w-96'>
         <div className='card-body'>
-          <h2 className='card-title justify-center text-2xl'>Login</h2>
+          <h2 className='card-title justify-center text-2xl'>
+            {isLoginForm ? 'Login' : 'Sign Up'}
+          </h2>
           <div>
-            {/* email */}
+            {/* Sign Up Fields */}
+            {!isLoginForm && (
+              <>
+                <label className='input validator mb-4'>
+                  <input
+                    type='text'
+                    placeholder='First Name'
+                    value={firstName}
+                    onChange={e => setFirstName(e.target.value)}
+                    required
+                  />
+                </label>
+                <label className='input validator mb-4'>
+                  <input
+                    type='text'
+                    placeholder='Last Name'
+                    value={lastName}
+                    onChange={e => setLastName(e.target.value)}
+                    required
+                  />
+                </label>
+              </>
+            )}
+
+            {/* Email */}
             <label className='input validator'>
               <svg
                 className='h-[1em] opacity-50'
@@ -60,17 +100,14 @@ const Login = () => {
               </svg>
               <input
                 type='email'
+                placeholder='Email'
                 value={emailId}
-                onChange={e => {
-                  setEmailId(e.target.value)
-                }}
+                onChange={e => setEmailId(e.target.value)}
                 required
               />
             </label>
-            <div className='validator-hint hidden'>
-              Enter valid email address
-            </div>
-            {/* password */}
+
+            {/* Password */}
             <label className='input validator my-4'>
               <svg
                 className='h-[1em] opacity-50'
@@ -95,26 +132,33 @@ const Login = () => {
               </svg>
               <input
                 type='password'
-                required
+                placeholder='Password'
                 value={password}
-                onChange={e => {
-                  setPassword(e.target.value)
-                }}
+                onChange={e => setPassword(e.target.value)}
+                required
               />
             </label>
-            <p className='validator-hint hidden -my-1.5 '>
-              At least one number and special character <br />
-              At least one lowercase letter <br />
-              At least one uppercase letter
-            </p>
           </div>
 
+          {/* Error */}
+          <p className='text-red-500 text-sm'>{error}</p>
+
+          {/* Submit Button */}
           <div className='card-actions justify-center'>
-            <button className='btn btn-primary my-1.5' onClick={handleLogin}>
-              Login
+            <button className='btn btn-primary my-1.5' onClick={handleSubmit}>
+              {isLoginForm ? 'Login' : 'Sign Up'}
             </button>
           </div>
-          <p className='error-message text-red-400'>{error}</p>
+
+          {/* Switch Form Text */}
+          <p
+            className='text-center text-blue-400 cursor-pointer'
+            onClick={() => setIsLoginForm(prev => !prev)}
+          >
+            {isLoginForm
+              ? 'New user? Sign up here'
+              : 'Already have an account? Login'}
+          </p>
         </div>
       </div>
     </div>
