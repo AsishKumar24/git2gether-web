@@ -5,8 +5,8 @@ import { addUser } from '../utils/userSlice'
 import { Navigate, useNavigate } from 'react-router'
 import { BASE_URL } from '../utils/constants'
 const Login = () => {
-  const [emailId, setEmailId] = useState('anjali@gmail.com')
-  const [password, setPassword] = useState('Anjali@123')
+  const [emailId, setEmailId] = useState('ravi@gmail.com')
+  const [password, setPassword] = useState('Ravi@123')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [isLoginForm, setIsLoginForm] = useState(true)

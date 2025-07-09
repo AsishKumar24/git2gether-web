@@ -23,20 +23,29 @@ const NavBar = () => {
   return (
     <div className='navbar bg-base-300 shadow-sm px-4 justify-between'>
       {/* LEFT: Brand Logo */}
-      <div className='flex items-center gap-2'>
-        <Link
-          to='/'
-          className='flex items-center gap-2 hover:scale-105 transition duration-200'
-        >
-          <img
-            src={logo}
-            alt='Git2gether Logo'
-            className='h-10 w-auto object-contain'
-          />
-          <span className='text-xl font-bold text-white tracking-wide'></span>
-        </Link>
-      </div>
+      {!user && (
+        <img
+          src={logo}
+          alt='Git2gether Logo'
+          className='h-10 w-auto object-contain'
+        />
+      )}
 
+      {user && (
+        <div className='flex items-center gap-2'>
+          <Link
+            to='/'
+            className='flex items-center gap-2 hover:scale-105 transition duration-200'
+          >
+            <img
+              src={logo}
+              alt='Git2gether Logo'
+              className='h-10 w-auto object-contain'
+            />
+            <span className='text-xl font-bold text-white tracking-wide'></span>
+          </Link>
+        </div>
+      )}
       {/* RIGHT: User Info + Dropdown */}
       {user && (
         <div className='flex items-center gap-4'>
